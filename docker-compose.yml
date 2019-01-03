@@ -1,0 +1,87 @@
+version: '2'
+
+networks:
+  hadoop_bridge:
+    driver: bridge
+
+services:
+  master:
+    image: ipharmacare/spark-master:1.0
+    depends_on:
+      - slave1
+      - slave2
+      - slave3
+    container_name: master
+    hostname: master
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+    networks:
+      - hadoop_bridge
+    ports:
+      - 8080:8080
+      - 8042:8042
+      - 8088:8088
+      - 19888:19888
+      - 49707:49707
+      - 50070:50070
+      - 50075:50075
+    tty: true
+  
+  slave1:
+    image: ipharmacare/spark-slave:1.0
+    container_name: slave1
+    hostname: slave1
+    networks:
+      - hadoop_bridge
+    ports:
+      - 8081:8080
+      - 8043:8042
+      - 8089:8088
+      - 19889:19888
+      - 49708:49707
+      - 50071:50070
+      - 50076:50075
+    tty: true
+
+  slave2:
+    image: ipharmacare/spark-slave:1.0
+    container_name: slave2
+    hostname: slave2
+    networks:
+      - hadoop_bridge
+    ports:
+      - 8082:8080
+      - 8044:8042
+      - 8090:8088
+      - 19890:19888
+      - 49709:49707
+      - 50072:50070
+      - 50077:50075
+    tty: true
+
+  slave3:
+    image: ipharmacare/spark-slave:1.0
+    container_name: slave3
+    hostname: slave3
+    networks:
+      - hadoop_bridge
+    ports:
+      - 8083:8080
+      - 8045:8042
+      - 8091:8088
+      - 19891:19888
+      - 49710:49707
+      - 50073:50070
+      - 50078:50075
+    tty: true
+
+  dns-proxy-server:
+    image: defreitas/dns-proxy-server
+    container_name: dns-proxy-server
+    hostname: dns-proxy-server
+    ports:
+      - 5380:5380
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+    restart: "unless-stopped"
