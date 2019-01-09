@@ -30,31 +30,35 @@ RUN mkdir -p /pid \
 			 /data/yarn/log_dir
 
 ENV HADOOP_HOME=/hadoop
-ENV HADOOP_PREFIX=${HADOOP_HOME}
-ENV HADOOP_COMMON_HOME=${HADOOP_HOME}
-ENV HADOOP_HDFS_HOME=${HADOOP_HOME}
-ENV HADOOP_MAPRED_HOME=${HADOOP_HOME}
-ENV HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
-ENV HADOOP_YARN_HOME=${HADOOP_HOME}
-ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
-ENV YARN_CONF_DIR=${HADOOP_HOME}/etc/hadoop
-ENV SPARK_HOME=/spark
-ENV HADOOP_PID_DIR=/pid
-ENV YARN_PID_DIR=/pid
+ENV HADOOP_PREFIX=${HADOOP_HOME} \
+	HADOOP_COMMON_HOME=${HADOOP_HOME} \
+	HADOOP_HDFS_HOME=${HADOOP_HOME} \
+	HADOOP_MAPRED_HOME=${HADOOP_HOME} \
+	HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec \
+	HADOOP_YARN_HOME=${HADOOP_HOME} \
+	HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop \
+	YARN_CONF_DIR=${HADOOP_HOME}/etc/hadoop \
+	SPARK_HOME=/spark \
+	HADOOP_PID_DIR=/pid \
+	ARN_PID_DIR=/pid
 
-ENV PATH /hadoop/bin:/hadoop/sbin:/hadoop/sbin:/hadoop/sbin:$PATH
+ENV PATH /spark/bin:/spark/sbin:/hadoop/bin:/hadoop/sbin:$PATH
 
 COPY hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY core-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY mapred-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY yarn-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY slaves ${HADOOP_HOME}/etc/hadoop/
+COPY slaves ${SPARK_HOME}/conf/
+COPY spark-env.sh ${SPARK_HOME}/conf/
 RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/java/default:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090 8020 9000
 # Mapred ports
 EXPOSE 10020 19888
+# Spark ports
+EXPOSE 7077
 #Yarn ports
 EXPOSE 8030 8031 8032 8033 8040 8042 8088
 #Other ports
