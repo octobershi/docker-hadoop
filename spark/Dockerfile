@@ -44,10 +44,8 @@ ENV HADOOP_PREFIX=${HADOOP_HOME} \
 
 ENV PATH /spark/bin:/spark/sbin:/hadoop/bin:/hadoop/sbin:$PATH
 
-COPY hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY core-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY mapred-site.xml ${HADOOP_HOME}/etc/hadoop/
-COPY yarn-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY slaves ${HADOOP_HOME}/etc/hadoop/
 COPY slaves ${SPARK_HOME}/conf/
 COPY spark-env.sh ${SPARK_HOME}/conf/
